@@ -31,7 +31,7 @@
 
 ### 2. Векторизация текста (TF-IDF)
 
-Применяется **TF-IDF** (Term Frequency-Inverse Document Frequency) с n-граммами.
+Применяется **TF-IDF** (Term Frequency-Inverse Document Frequency) с n-граммами: `vectorizer = TfidfVectorizer(ngram_range=(1,2))`
 
 **Параметры:**
 - `ngram_range=(1,2)` — использование однограмм (отдельных слов) и биграмм (пар слов)
@@ -55,7 +55,7 @@
 
 ### 1. Random Forest Classifier
 
-Ансамбль деревьев решений: 'rf_model = RandomForestClassifier(n_estimators=200, random_state=2)'
+Ансамбль деревьев решений: `rf_model = RandomForestClassifier(n_estimators=200, random_state=2)`
 
 **Параметры:**
 - `n_estimators=200` — количество деревьев в лесу
