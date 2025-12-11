@@ -68,12 +68,7 @@
 
 ### 2. Logistic Regression
 
-Линейная модель классификации:
-
-lr_model = LogisticRegression(max_iter=200, random_state=2)
-
-text
-
+Линейная модель классификации: `lr_model = LogisticRegression(max_iter=200, random_state=2)`
 **Параметры:**
 - `max_iter=200` — максимальное количество итераций обучения
 - `random_state=2` — seed для воспроизводимости
@@ -85,14 +80,7 @@ text
 
 ### 3. Voting Classifier (Ансамблирование)
 
-Объединение двух моделей через голосование:
-
-voting_model = VotingClassifier(estimators=[
-('rf', rf_model),
-('lr', lr_model)
-], voting='soft')
-
-text
+Объединение двух моделей: `voting_model = VotingClassifier(estimators=[('rf', rf_model),('lr', lr_model)], voting='soft')`
 
 **Параметры:**
 - `estimators` — список моделей для ансамблирования
@@ -114,92 +102,23 @@ text
 
 ## Процесс обучения и предсказания
 
-### 1. Обучение ансамбля
-
-voting_model.fit(X_train_tfidf, y_train)
-
-text
+### 1. Обучение ансамбля `voting_model.fit(X_train_tfidf, y_train)`
 
 На этом этапе:
 - Random Forest обучается на TF-IDF признаках
 - Logistic Regression обучается на том же наборе признаков
 - Модели обучаются независимо друг от друга
 
-### 2. Получение вероятностей на тесте
-
-y_pred_proba = voting_model.predict_proba(X_test_tfidf)
-
-text
+### 2. Получение вероятностей на тесте `y_pred_proba = voting_model.predict_proba(X_test_tfidf)`
 
 `predict_proba` возвращает массив размерности (n_samples, n_classes):
 - Первый столбец — вероятность класса 0
 - Второй столбец — вероятность класса 1
 
-### 3. Извлечение вероятностей для класса 1
-
-test_data['probability'] = y_pred_proba[:, 1]
-
-text
-
+### 3. Извлечение вероятностей для класса 1 `test_data['probability'] = y_pred_proba[:, 1]`
 Берутся вероятности принадлежности к классу 1 (второй столбец).
 
-## Выходной файл
-
-output = test_data[['id', 'probability']]
-output.to_csv('submission.csv', index=False)
-
-text
-
-**Структура submission.csv:**
-id,probability
-1,0.8234
-2,0.1567
-3,0.9123
-...
-
-text
-
-где:
-- `id` — уникальный идентификатор отзыва
-- `probability` — предсказанная вероятность принадлежности к классу 1
-
-## Установка и запуск
-
-### Требования
-
-- Python 3.10+
-- pandas
-- scikit-learn
-
-### Установка зависимостей
-
-pip install pandas scikit-learn
-
-text
-
-### Запуск
-
-1. Поместите файлы `train.csv` и `test.csv` в директорию `/kaggle/input/ef-msu-2024-comp-2/` или измените пути в коде
-
-2. Запустите Jupyter Notebook или Python-скрипт:
-jupyter notebook notebook.ipynb
-
-или
-python classifier.py
-
-text
-
-3. Результат будет сохранен в файл `submission.csv`
-
-## Файлы проекта
-
-- **notebook.ipynb** — основной Jupyter Notebook с полным кодом
-- **train.csv** — обучающая выборка с отзывами и метками (не включена в репозиторий)
-- **test.csv** — тестовая выборка (не включена в репозиторий)
-- **submission.csv** — файл с предсказанными вероятностями (генерируется автоматически)
-
 ## Возможные улучшения
-
 ### Предобработка текста
 
 - **Токенизация и лемматизация**: преобразование слов в начальную форму (например, "работают" → "работать")
@@ -223,32 +142,20 @@ text
 - **Naive Bayes** — быстрая и хорошо работающая модель для текстов
 - **Neural Networks** — LSTM, GRU, или трансформеры (BERT, RoBERTa)
 
-### Настройка голосования
-
-- Использование жесткого голосования (`voting='hard'`) вместо мягкого
-- Добавление весов для моделей:
-VotingClassifier(..., weights=) # Random Forest в 2 раза важнее​
-
-text
-
 ### Кросс-валидация
 
 - Добавление кросс-валидации на тренировочных данных для оценки качества:
-from sklearn.model_selection import cross_val_score
+`from sklearn.model_selection import cross_val_score
 scores = cross_val_score(voting_model, X_train_tfidf, y_train, cv=5)
-print(f"CV Score: {scores.mean():.4f} (+/- {scores.std():.4f})")
-
-text
+print(f"CV Score: {scores.mean():.4f} (+/- {scores.std():.4f})")`
 
 ### Гиперпараметрическая оптимизация
-
 - GridSearchCV или RandomizedSearchCV для подбора оптимальных параметров:
 - Количество деревьев в Random Forest
 - Регуляризация в Logistic Regression (parameter `C`)
 - Параметры TF-IDF (max_features, min_df, max_df)
 
 ### Анализ ошибок
-
 - Изучение неправильно классифицированных примеров
 - Feature importance анализ (какие слова наиболее важны)
 - Анализ ROC-кривой и матрицы ошибок
